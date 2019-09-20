@@ -1,5 +1,4 @@
 def findXslt(str_name):
-    print(str_name)
     if str_name == "[건보]자격득실확인서":
         return "xslt_nhis_ja"
     elif str_name == "[건보]납부확인서":

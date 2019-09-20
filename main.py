@@ -64,8 +64,6 @@ class MyApp(QWidget):
         groupbox.setLayout(vbox)
         return groupbox
 
-
-
     def append_text(self):
         text = self.le.text()
         self.le.clear()
@@ -75,11 +73,13 @@ class MyApp(QWidget):
 
     def submit_pressed(self):
         self.resultView.setText("진행중")
+        f = open("xslt\\abc.html", "w", encoding='utf8')
+        f.write("")
+        f.close()
         try:
             print(self.listV.currentItem().text())
             try:
                 self.le.setText(allFunc.make_substring(self.le.toPlainText(), self.listV.currentItem().text()))
-                print("asd")
                 self.resultView.setText("정상")
             except:
                 QMessageBox.about(self, "아님!", "정상 xml 이 아님 or 구현되지 않은 xslt 참조")
@@ -101,12 +101,15 @@ class MyApp(QWidget):
     def pastSubmit(self):
         try:
             self.le.setText(clipboard.paste())
-            #self.submit_pressed()
+            # self.submit_pressed()
             print(self.getmyStr(self))
         except:
             print("빈 클립보드")
+
     def getmyStr(self):
         return self.le.toPlainText()
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = MyApp()
