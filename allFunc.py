@@ -1,8 +1,6 @@
-import clipboard
 import lxml.etree as etree
 import xml.etree.ElementTree as ele
 from xml.etree.ElementTree import Element, dump
-from math import *
 import myFile
 
 
@@ -53,6 +51,60 @@ def indent(elem, level=0):
             elem.tail = i
 
 
-def error_xml(asd):
+def setList():
+    f = open("xslt/item_list.txt", "r")
+    s = ""
+    while True:
+        r = f.readline()
+        n = r.split(",")
+        if n[0] != 'EOF\n':
+            s += n[0]
+        elif n[0] == "EOF\n":
+            break
+        s += ","
+    f.close()
+    return s
+
+
+def inputList(str1, str2, target):
+    print(str1 + " / " + str2 + " / " + target)
+    f = open("xslt/item_list.txt", "r")
+    s = str1 + "," + str2 + "\n"
+    r = f.readlines()
+    k = 0
+    for i in r:
+        n = i.split(",")
+        if n[0] == 'EOF\n':
+            break
+        elif n[0] == target:
+            r[k] += s
+            print(r[k])
+            break;
+        k += 1
+    f.close()
+    f = open("xslt/item_list.txt", "w")
+    f.writelines(r)
+    f.close()
+
+
+def deleteList(target):
+    f = open("xslt/item_list.txt", "r")
+    r = f.readlines()
+    k = 0
+    for i in r:
+        n = i.split(",")
+        if n[0] == 'EOF\n':
+            break
+        elif n[0] == target:
+            r[k] = ""
+            break;
+        k += 1
+    f.close()
+    f = open("xslt/item_list.txt", "w")
+    f.writelines(r)
+    f.close()
+
+
+def error_xml(make_error):
     print("에러 발생")
-    print(asd)
+    print(make_error)

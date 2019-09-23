@@ -1,9 +1,7 @@
 import sys
-import clipboard
 from PyQt5.QtWidgets import *
 import allFunc
 
-import myFile
 
 
 class MyApp(QWidget):
@@ -37,18 +35,26 @@ class MyApp(QWidget):
 
     def createPushButtonGroup(self):
         groupbox = QGroupBox('설정 부분')
+        self.addListButton = QPushButton('추가하기')
+        self.deleteListButton = QPushButton('삭제하기')
+        self.doc_name = QLineEdit("문서명을 입력하세요")
+        self.doc_xslt = QLineEdit("xslt 문서명을 입력하세요")
         self.submitButton = QPushButton('제출')
-        self.pasteSubmitButton = QPushButton('구현중')
-        self.pasteSubmitButton.pressed.connect(self.pastSubmit)
+        self.addListButton.pressed.connect(self.addList)
+        self.deleteListButton.pressed.connect(self.deleteList)
         self.submitButton.pressed.connect(self.submit_pressed)
         self.listV = QListWidget(self)
-        for i in myFile.itemList():
+        itemLength = allFunc.setList().split(",")
+        for i in itemLength:
             item = QListWidgetItem()
             item.setText(i)
             self.listV.addItem(item)
         vbox = QVBoxLayout()
         vbox.addWidget(self.submitButton)
-        vbox.addWidget(self.pasteSubmitButton)
+        vbox.addWidget(self.doc_name)
+        vbox.addWidget(self.doc_xslt)
+        vbox.addWidget(self.addListButton)
+        vbox.addWidget(self.deleteListButton)
         vbox.addWidget(self.listV)
         groupbox.setLayout(vbox)
         return groupbox
@@ -98,13 +104,26 @@ class MyApp(QWidget):
             self.resultView.setText("무언가 문제 발생")
             self.htmlView.setText("")
 
-    def pastSubmit(self):
+    def addList(self):
         try:
-            self.le.setText(clipboard.paste())
-            # self.submit_pressed()
-            print(self.getmyStr(self))
+            allFunc.inputList(self.doc_name.text(), self.doc_xslt.text(), self.listV.currentItem().text())
+            self.listV.clear()
+            itemLength = allFunc.setList().split(",")
+            for i in itemLength:
+                item = QListWidgetItem()
+                item.setText(i)
+                self.listV.addItem(item)
         except:
-            print("빈 클립보드")
+            print("에러 ㅎ")
+
+    def deleteList(self):
+        allFunc.deleteList(self.listV.currentItem().text())
+        self.listV.clear()
+        itemLength = allFunc.setList().split(",")
+        for i in itemLength:
+            item = QListWidgetItem()
+            item.setText(i)
+            self.listV.addItem(item)
 
     def getmyStr(self):
         return self.le.toPlainText()
