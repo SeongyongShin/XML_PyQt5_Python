@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
+import xml.etree.ElementTree as ele
 import allFunc
 
 
@@ -83,10 +84,11 @@ class MyApp(QWidget):
         f.write("")
         f.close()
         try:
-            print(self.listV.currentItem().text())
             try:
+
                 self.le.setText(allFunc.make_substring(self.le.toPlainText(), self.listV.currentItem().text()))
                 self.resultView.setText("정상")
+
             except:
                 QMessageBox.about(self, "아님!", "정상 xml 이 아님 or 구현되지 않은 xslt 참조")
                 self.resultView.setText("비정상")
@@ -103,6 +105,12 @@ class MyApp(QWidget):
         except:
             self.resultView.setText("무언가 문제 발생")
             self.htmlView.setText("")
+
+        try:
+            str1 = allFunc.getCorrectNode(ele.parse("xslt/hh.xml").getroot(), "")
+            self.le.setText(str1)
+        except:
+            print("Unexpected error:", sys.exc_info()[0])
 
     def addList(self):
         try:

@@ -1,7 +1,7 @@
 import lxml.etree as etree
+import sys
 import xml.etree.ElementTree as ele
-from xml.etree.ElementTree import Element, dump
-import myFile
+from xml.etree.ElementTree import Element
 
 
 def make_substring(str_msg, str_name):
@@ -24,7 +24,7 @@ def make_substring(str_msg, str_name):
         chstr += "&nbsp;"
     chstr += "</tr></td><table"
     dom = etree.parse("xslt\\hh.xml")
-    xslt = etree.parse("xslt\\" + myFile.findXslt(str_name) + ".xslt")
+    xslt = etree.parse("xslt\\" + findXslt(str_name) + ".xslt")
     transform = etree.XSLT(xslt)
     newdom = transform(dom)
     str1 = str(etree.tostring(newdom, pretty_print=True))[2:].replace("\\n", "")
@@ -66,8 +66,21 @@ def setList():
     return s
 
 
+def findXslt(str_name):
+    f = open("xslt/item_list.txt", "r")
+    while True:
+        r = f.readline()
+        n = r.split(",")
+        if n[0] == str_name:
+            f.close()
+            return str(n[1]).replace("\n", "")
+        elif n[0] == "EOF\n":
+            break
+    f.close()
+    return "xslt_scf_gibon"
+
+
 def inputList(str1, str2, target):
-    print(str1 + " / " + str2 + " / " + target)
     f = open("xslt/item_list.txt", "r")
     s = str1 + "," + str2 + "\n"
     r = f.readlines()
@@ -108,3 +121,17 @@ def deleteList(target):
 def error_xml(make_error):
     print("에러 발생")
     print(make_error)
+
+
+def getCorrectNode(root, t):
+    s = ""
+    for child in root:
+        if child.tag != "":
+            try:
+                s += t + "[" +child.tag + "] : " + child.text + "\n"
+                s += getCorrectNode(child, t + "  ")
+            except:
+                s += "\n"
+        else:
+            print("!"+child.tag+"!")
+    return s
